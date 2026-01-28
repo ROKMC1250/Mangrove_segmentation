@@ -1,6 +1,6 @@
 # MANGO: A Global Single-Date Paired Dataset for Mangrove Segmentation
 
-**IEEE International Geoscience and Remote Sensing Symposium (IGARSS), 2026 (Under Review)**
+<!-- **IEEE International Geoscience and Remote Sensing Symposium (IGARSS), 2026 (Under Review)** -->
 
 This repository contains the official code for **MANGO**, a global single-date paired dataset for mangrove segmentation. This repository not only provides the MANGO dataset but also offers a comprehensive benchmark environment for training and evaluating various segmentation models on mangrove detection tasks.
 
@@ -190,9 +190,9 @@ The script automatically:
 3. Generates a comparison figure showing predictions from all models
 4. Saves individual prediction masks to `results/individual_predictions/`
 
-## Citation
+<!-- ## Citation
 
-If you use this dataset or code in your research, please cite:
+If you use this dataset or code in your research, please cite: -->
 
 <!-- ```bibtex
 @inproceedings{heo2026mango,

@@ -11,7 +11,5 @@ model_performance_table.png
 *.sh
 *.tif
 /.vscode
-AE_TRAINING_GUIDE.md
-TRAINING_README.md
 hyptune.py
 ./vscode

@@ -1,0 +1,12 @@
+torch>=2.0.0
+torchvision>=0.15.0
+numpy
+pandas
+rasterio
+tqdm
+matplotlib
+Pillow
+segmentation-models-pytorch
+PyYAML
+tensorboard
+optuna

@@ -1,0 +1,45 @@
+data:
+  root_dir: 'datasets/GEE/sentinel-2_w0.45_0.1_0.45_split'
+  
+model:
+  name: 'AEMAnet'
+  args:
+    encoder_name: 'resnet50'
+    in_img: 6
+    ae_dim: 64
+    D: 3 # Number of projected AE channels
+    classes: 1 # Binary segmentation
+    bce_weight: 2.0
+
+train:
+  seed: 42
+  uid: 'ae_manet_resnet50_v1'
+  
+  epoch: 50
+  batch_size: 12
+  learning_rate: 0.001
+  
+  loss:
+    name: 'AELoss'
+    lambda_sep: 0.1
+    lambda_ortho: 0.0
+    lambda_tv: 0.0
+    lambda_mag: 0.0
+  
+  optimizer:
+    name: 'AdamW'
+    args:
+      weight_decay: 0.01
+
+  scheduler:
+    name: 'CosineAnnealingWarmRestarts'
+    args:
+      T_0: 10
+      eta_min: 1.0e-6
+
+  log_dir: logs
+  n_workers: 2
+  no_ddp: false
+  no_save: false
+  patience: -1
+  log_image_interval: 200

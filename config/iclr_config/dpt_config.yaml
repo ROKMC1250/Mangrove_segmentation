@@ -1,0 +1,40 @@
+data:
+  root_dir: 'datasets/GEE/sentinel-2_w0.45_0.1_0.45_split'
+  
+model:
+  name: 'DPT'
+  args:
+    encoder_name: 'tu-vit_base_patch16_224.augreg_in21k'
+    in_channels: 6
+    classes: 1 # Binary segmentation
+    encoder_weights: null  # 6채널 입력이면 보통 None 사용
+
+train:
+  seed: 42
+  uid: 'dpt_vit_base_v1'
+  
+  epoch: 50
+  batch_size: 12  # Smaller batch size for Vision Transformer
+  learning_rate: 0.0003  # Lower LR for transformer
+  
+  loss:
+    name: 'DiceBCE'
+    bce_weight: 2.0
+  
+  optimizer:
+    name: 'AdamW'
+    args:
+      weight_decay: 0.01
+
+  scheduler:
+    name: 'CosineAnnealingWarmRestarts'
+    args:
+      T_0: 10
+      eta_min: 1.0e-6
+
+  log_dir: logs
+  n_workers: 4
+  no_ddp: false
+  no_save: false
+  patience: -1
+  log_image_interval: 200

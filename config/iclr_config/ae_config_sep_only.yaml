@@ -1,0 +1,42 @@
+# Configuration for AE-Enhanced Mangrove Segmentation Training - Separability Loss Only
+
+data:
+  root_dir: 'datasets/GEE/sentinel-2_w0.45_0.1_0.45_split' # Path to the processed dataset with AE features
+  
+model:
+  name: 'AEUnetPlusPlus'
+  args:
+    encoder_name: 'resnet34' # Encoder for the UNet++ backbone
+    in_img: 6 # Number of satellite image channels (B, G, R, NIR, SWIR1, SWIR2)
+    ae_dim: 64 # Number of AE feature channels
+    D: 3 # Number of projected AE channels
+    classes: 1 # Binary segmentation (same as SegmentationTrainer)
+    bce_weight: 2.0 # Weight for BCE loss in DiceBCE combination (same as SegmentationTrainer)
+
+train:
+  uid: 'ae_sep_only_v1' 
+  batch_size: 144
+  epoch: 50
+  learning_rate: 0.0005
+  log_dir: logs
+  log_image_interval: 200
+  loss:
+    lambda_mag: 0.0
+    lambda_ortho: 0.0
+    lambda_sep: 0.1
+    lambda_tv: 0.0
+    name: AELoss
+  n_workers: 2
+  no_ddp: false
+  no_save: false
+  optimizer:
+    args:
+      weight_decay: 0.01
+    name: AdamW
+  patience: -1
+  scheduler:
+    args:
+      T_0: 10
+      eta_min: 1.0e-06
+    name: CosineAnnealingWarmRestarts
+  seed: 42

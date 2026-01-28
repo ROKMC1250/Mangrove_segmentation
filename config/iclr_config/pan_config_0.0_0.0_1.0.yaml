@@ -1,0 +1,40 @@
+data:
+  root_dir: 'datasets/GEE/sentinel-2_w0.0_0.0_1.0_split'
+  
+model:
+  name: 'PAN'
+  args:
+    encoder_name: 'resnet50'
+    in_channels: 6
+    classes: 1 # Binary segmentation
+    encoder_weights: null
+
+train:
+  seed: 42
+  uid: 'pan_0.0_0.0_1.0_v1'
+  
+  epoch: 50
+  batch_size: 12
+  learning_rate: 0.001
+  
+  loss:
+    name: 'DiceBCE'
+    bce_weight: 2.0
+  
+  optimizer:
+    name: 'AdamW'
+    args:
+      weight_decay: 0.01
+
+  scheduler:
+    name: 'CosineAnnealingWarmRestarts'
+    args:
+      T_0: 10
+      eta_min: 1.0e-6
+
+  log_dir: logs
+  n_workers: 4
+  no_ddp: false
+  no_save: false
+  patience: -1
+  log_image_interval: 200 

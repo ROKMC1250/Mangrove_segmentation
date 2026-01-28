@@ -1,0 +1,45 @@
+# Configuration for MAnet on MVI dataset
+# Model: MAnet with ResNet50 encoder
+# Dataset: sentinel-2_harmonized_MVI (Mangrove Vegetation Index)
+
+data:
+  root_dir: 'datasets/GEE/sentinel-2_harmonized_MVI_split'
+  
+model:
+  name: 'MAnet'
+  args:
+    encoder_name: 'resnet50'
+    in_channels: 13  # B, G, R, NIR, SWIR1, SWIR2
+    classes: 1  # Binary segmentation
+    encoder_weights: null
+
+train:
+  seed: 42
+  uid: 'manet_MVI_v1'
+  
+  epoch: 50
+  batch_size: 32
+  learning_rate: 0.001
+  
+  loss:
+    name: 'DiceBCE'
+    bce_weight: 2.0
+  
+  optimizer:
+    name: 'AdamW'
+    args:
+      weight_decay: 0.01
+
+  scheduler:
+    name: 'CosineAnnealingWarmRestarts'
+    args:
+      T_0: 10
+      eta_min: 1.0e-6
+
+  log_dir: logs
+  n_workers: 4
+  no_ddp: false
+  no_save: false
+  patience: -1
+  log_image_interval: 200
+

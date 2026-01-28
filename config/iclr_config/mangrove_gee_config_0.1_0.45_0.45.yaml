@@ -1,0 +1,50 @@
+# Configuration for Mangrove Segmentation Training
+
+data:
+  root_dir: 'datasets/GEE/sentinel-2_w0.1_0.45_0.45_split' # Path to the processed dataset
+  
+model:
+  name: 'UnetPlusPlus'
+  args:
+    encoder_name: 'efficientnet-b4' # A powerful and efficient encoder
+    in_channels: 6 # B, G, R, NIR, SWIR1, SWIR2
+    classes: 1 # Mangrove (vs. non-mangrove)
+    bce_weight: 2.0 # Weight for the BCE part of the combined loss
+
+train:
+  seed: 42
+  uid: 'iclr_mangrove_unet_plus_plus_v1' # Unique ID for this training run
+  
+  # Training Hyperparameters
+  epoch: 50
+  batch_size: 15
+  learning_rate: 0.001
+  
+  # Loss Function: Combination of Dice Loss and BCE for robust segmentation
+  loss:
+    name: 'DiceBCE' 
+  
+  # Optimizer
+  optimizer:
+    name: 'AdamW'
+    args:
+      weight_decay: 0.01
+
+  # Learning Rate Scheduler
+  scheduler:
+    name: 'CosineAnnealingWarmRestarts'
+    args:
+      T_0: 10 # Number of iterations for the first restart
+      eta_min: 1.0e-6
+
+  log_dir: logs
+  # Hardware and DDP
+  n_workers: 4
+  no_ddp: false # Set to true if you want to run on a single GPU without DDP
+  no_save: false # Set to true to disable checkpoint saving
+
+  # Early Stopping (disabled by default)
+  patience: -1 
+  
+  # Image logging interval (in steps) for training
+  log_image_interval: 100 

@@ -1,0 +1,45 @@
+# Configuration for DPT on MF dataset
+# Model: DPT with ViT-Base encoder (requires 224x224 input)
+# Dataset: sentinel-2_harmonized_MF (Median Filter)
+
+data:
+  root_dir: 'datasets/GEE/sentinel-2_harmonized_MF_split'
+  
+model:
+  name: 'DPT'
+  args:
+    encoder_name: 'tu-vit_base_patch16_224.augreg_in21k'
+    in_channels: 13  # B, G, R, NIR, SWIR1, SWIR2
+    classes: 1  # Binary segmentation
+    encoder_weights: null
+
+train:
+  seed: 42
+  uid: 'dpt_MF_v1'
+  
+  epoch: 50
+  batch_size: 32
+  learning_rate: 0.0003  # Lower LR for transformer
+  
+  loss:
+    name: 'DiceBCE'
+    bce_weight: 2.0
+  
+  optimizer:
+    name: 'AdamW'
+    args:
+      weight_decay: 0.01
+
+  scheduler:
+    name: 'CosineAnnealingWarmRestarts'
+    args:
+      T_0: 10
+      eta_min: 1.0e-6
+
+  log_dir: logs
+  n_workers: 4
+  no_ddp: false
+  no_save: false
+  patience: -1
+  log_image_interval: 200
+

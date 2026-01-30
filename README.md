@@ -4,7 +4,7 @@
 
 This repository contains the official code for **MANGO**, a global single-date paired dataset for mangrove segmentation. This repository not only provides the MANGO dataset but also offers a comprehensive benchmark environment for training and evaluating various segmentation models on mangrove detection tasks.
 
-[![arXiv](https://img.shields.io/badge/arXiv-PDF-b31b1b.svg)](https://arxiv.org/abs/XXXX.XXXXX) [![Dataset](https://img.shields.io/badge/HuggingFace-Dataset-yellow.svg)](https://huggingface.co/datasets/hjh1037/MANGO) [![License](https://img.shields.io/badge/License-CC%20BY--NC%204.0-lightgrey.svg)](https://creativecommons.org/licenses/by-nc/4.0/)
+[![arXiv](https://img.shields.io/badge/arXiv-PDF-b31b1b.svg)](https://arxiv.org/pdf/2601.17039) [![Dataset](https://img.shields.io/badge/HuggingFace-Dataset-yellow.svg)](https://huggingface.co/datasets/hjh1037/MANGO) [![License](https://img.shields.io/badge/License-CC%20BY--NC%204.0-lightgrey.svg)](https://creativecommons.org/licenses/by-nc/4.0/)
 
 [Junhyuk Heo](https://rokmc1250.github.io) | Beomkyu Choi | Hyunjin Shin | Darongsae Kwon
 

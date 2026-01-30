@@ -45,12 +45,49 @@ The MANGO dataset is available on Hugging Face:
 
 **[https://huggingface.co/datasets/hjh1037/MANGO](https://huggingface.co/datasets/hjh1037/MANGO)**
 
+### Dataset Statistics
+
+| Split | Images | Masks |
+|-------|--------|-------|
+| Train | 34,272 | 34,272 |
+| Validation | 4,159 | 4,159 |
+| Test | 4,272 | 4,272 |
+| **Total** | **42,703** | **42,703** |
+
+- **Image size**: 256 x 256 pixels
+- **Image format**: GeoTIFF (13 bands, uint16)
+- **Mask format**: GeoTIFF (1 band, uint8, binary)
+
+### Sentinel-2 Band Information
+
+The dataset contains 13-band Sentinel-2 imagery with the following bands:
+
+| Band Index | Band Name | Description | Resolution | Wavelength |
+|------------|-----------|-------------|------------|------------|
+| 1 | B1 | Aerosol | 60m | 443nm |
+| 2 | B2 | Blue | 10m | 490nm |
+| 3 | B3 | Green | 10m | 560nm |
+| 4 | B4 | Red | 10m | 665nm |
+| 5 | B5 | Red Edge 1 | 20m | 705nm |
+| 6 | B6 | Red Edge 2 | 20m | 740nm |
+| 7 | B7 | Red Edge 3 | 20m | 783nm |
+| 8 | B8 | NIR | 10m | 842nm |
+| 9 | B8A | Narrow NIR | 20m | 865nm |
+| 10 | B9 | Water Vapor | 60m | 945nm |
+| 11 | B11 | SWIR 1 | 20m | 1610nm |
+| 12 | B12 | SWIR 2 | 20m | 2190nm |
+| 13 | SCL | Scene Classification | 20m | - |
+
+> **RGB Visualization**: To visualize images as true-color RGB, use bands **4 (Red)**, **3 (Green)**, **2 (Blue)**.
+
+### Directory Structure
+
 After downloading, place the dataset in the `datasets/GEE/` directory:
 
 ```
 datasets/
 └── GEE/
-    └── sentinel-2_harmonized_MVI_split/
+    └── MANGO/
         ├── train/
         │   ├── images/
         │   └── masks/
@@ -94,16 +131,16 @@ python train.py --config config/experiment_config/unetpp_MVI.yaml
 
 ```bash
 # Train UNet++ with default settings
-python train.py --config config/experiment_config/unetpp_MVI.yaml
+python train.py --config config/experiment_config/unetpp_MF.yaml
 
 # Train with custom experiment ID and seed
-python train.py --config config/experiment_config/segformer_MVI.yaml --uid my_experiment --seed 42
+python train.py --config config/experiment_config/segformer_MF.yaml --uid my_experiment --seed 42
 
 # Train on single GPU without DDP
-python train.py --config config/experiment_config/dpt_MVI.yaml --no-ddp
+python train.py --config config/experiment_config/dpt_MF.yaml --no-ddp
 
 # Resume training from checkpoint
-python train.py --config config/experiment_config/unetpp_MVI.yaml --model-path logs/unetpp_MVI_v1/weights/last.pt
+python train.py --config config/experiment_config/unetpp_MF.yaml --model-path logs/unetpp_MF_v1/weights/last.pt
 ```
 
 Training logs and checkpoints are saved to `logs/{uid}/`:
@@ -138,10 +175,10 @@ python test.py logs/{uid}
 
 ```bash
 # Test with best checkpoint
-python test.py logs/unetpp_MVI_v1 --weight-type best
+python test.py logs/unetpp_MF_v1 --weight-type best
 
 # Test with custom batch size
-python test.py logs/segformer_MVI_v1 --weight-type last --batch-size 8
+python test.py logs/segformer_MF_v1 --weight-type last --batch-size 8
 ```
 
 Test results are saved to `logs/{uid}/results/`:

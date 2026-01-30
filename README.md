@@ -8,42 +8,23 @@ This repository contains the official code for **MANGO**, a global single-date p
 
 [Junhyuk Heo](https://rokmc1250.github.io) | Beomkyu Choi | Hyunjin Shin | Darongsae Kwon
 
-## Supported Models
+## Dataset
 
-This benchmark supports the following segmentation architectures:
+### Data Collection Pipeline
 
-| Model | Description |
-|-------|-------------|
-| UNet++ | Nested U-Net with dense skip connections |
-| MAnet | Multi-scale Attention Network |
-| PAN | Pyramid Attention Network |
-| DeepLabV3+ | Encoder-Decoder with Atrous Separable Convolution |
-| Segformer | Simple and Efficient Design for Semantic Segmentation with Transformers |
-| FPN | Feature Pyramid Network |
-| DPT | Dense Prediction Transformer |
-| UperNet | Unified Perceptual Parsing Network |
+The MANGO dataset is constructed using a quality-aware scene selection pipeline. For each site, multiple Sentinel-2 candidates are evaluated using the Fisher discriminant ratio to select the optimal single-date image that maximizes class separability between mangrove and background regions.
 
-## Setup
+<p align="center">
+  <img src="images/MANGO_dataset_collection_pipline.png" alt="Data Collection Pipeline" width="100%">
+</p>
 
-### Requirements
+### Dataset Overview
 
-Install the required dependencies:
+The MANGO dataset provides global coverage with country-disjoint train/validation/test splits for rigorous generalization testing. The dataset includes stratified sampling across different mangrove density levels.
 
-```bash
-pip install -r requirements.txt
-```
-
-The main dependencies include:
-- PyTorch >= 2.0.0
-- segmentation-models-pytorch
-- rasterio
-- tensorboard
-
-## Download Datasets
-
-The MANGO dataset is available on Hugging Face:
-
-**[https://huggingface.co/datasets/hjh1037/MANGO](https://huggingface.co/datasets/hjh1037/MANGO)**
+<p align="center">
+  <img src="images/MANGO_dataset_information.png" alt="Dataset Information" width="100%">
+</p>
 
 ### Dataset Statistics
 
@@ -80,7 +61,11 @@ The dataset contains 13-band Sentinel-2 imagery with the following bands:
 
 > **RGB Visualization**: To visualize images as true-color RGB, use bands **4 (Red)**, **3 (Green)**, **2 (Blue)**.
 
-### Directory Structure
+## Download
+
+The MANGO dataset is available on Hugging Face:
+
+**[https://huggingface.co/datasets/hjh1037/MANGO](https://huggingface.co/datasets/hjh1037/MANGO)**
 
 After downloading, place the dataset in the `datasets/GEE/` directory:
 
@@ -106,12 +91,61 @@ data:
   root_dir: 'your/custom/path'
 ```
 
+## Benchmark Results
+
+### Quantitative Results
+
+Benchmark results of segmentation models on the MANGO country-disjoint test set, comparing MVI-based and MF-based selection protocols.
+
+<p align="center">
+  <img src="images/Quantitative_results.png" alt="Quantitative Results" width="100%">
+</p>
+
+### Qualitative Results
+
+Visual comparison of segmentation predictions across different baseline models.
+
+<p align="center">
+  <img src="images/Qualitative_results.png" alt="Qualitative Results" width="100%">
+</p>
+
+## Supported Models
+
+This benchmark supports the following segmentation architectures:
+
+| Model | Description |
+|-------|-------------|
+| UNet++ | Nested U-Net with dense skip connections |
+| MAnet | Multi-scale Attention Network |
+| PAN | Pyramid Attention Network |
+| DeepLabV3+ | Encoder-Decoder with Atrous Separable Convolution |
+| Segformer | Simple and Efficient Design for Semantic Segmentation with Transformers |
+| FPN | Feature Pyramid Network |
+| DPT | Dense Prediction Transformer |
+| UperNet | Unified Perceptual Parsing Network |
+
+## Setup
+
+### Requirements
+
+Install the required dependencies:
+
+```bash
+pip install -r requirements.txt
+```
+
+The main dependencies include:
+- PyTorch >= 2.0.0
+- segmentation-models-pytorch
+- rasterio
+- tensorboard
+
 ## Training
 
 To train a model, use the `train.py` script with a configuration file:
 
 ```bash
-python train.py --config config/experiment_config/unetpp_MVI.yaml
+python train.py --config config/experiment_config/unetpp_MF.yaml
 ```
 
 ### Training Arguments
@@ -126,6 +160,22 @@ python train.py --config config/experiment_config/unetpp_MVI.yaml
 | `--port` | Port for DDP (Distributed Data Parallel) | Random |
 | `--no-ddp` | Disable DDP and use single GPU | False |
 | `--no-save` | Disable logging and checkpoint saving (for debugging) | False |
+
+### Configuration File
+
+You can customize the training by modifying the config file. For example, to change the number of input bands:
+
+```yaml
+model:
+  name: 'UnetPlusPlus'
+  args:
+    encoder_name: 'efficientnet-b4'
+    in_channels: 13  # Adjust this to use different number of bands (e.g., 6 for RGB+NIR+SWIR)
+    classes: 1
+    bce_weight: 2.0
+```
+
+> **Note**: If you modify `in_channels`, make sure your dataset loader also provides the corresponding number of bands.
 
 ### Example Commands
 
